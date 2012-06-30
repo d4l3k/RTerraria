@@ -1,13 +1,13 @@
-RubyCraft
+RTerraria
 =========
 
 About
 -----
-RubyCraft is a Minecraft server written completely in the Ruby language and utilizing the EventMachine network library. At the present moment, it's incomplete, but you are welcome to hack upon it.
+RTerraria is a Terraria server written completely in the Ruby language and utilizing the EventMachine network library. At the present moment, it's incomplete, but you are welcome to hack upon it.
 
 License
 -------------
-RubyCraft is licensed under __Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)__.
+RTerraria is licensed under __Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)__.
 Full license can be found here:
 
 _http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode_
