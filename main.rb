@@ -6,6 +6,7 @@ $LOAD_PATH.unshift( File.dirname(__FILE__) )
 # This file includes everything, and then runs the server.
 # Every class that is added should be required here and not elsewhere.
 
+#require 'psych'
 require 'logger'
 require "yaml"
 require "zlib"

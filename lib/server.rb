@@ -5,35 +5,35 @@ class Server
 	@plugins
 	@lib_path
 	@plugin_path
-	@configuration
+	$configuration
 	def initialize
+	  $server = self
 		@version = "v0.1-alpha"
-		@log = RubycraftLogger.new("RubyCraft")
+		@log = RubycraftLogger.new("RTerraria")
 		@log.info("RubyCraft #{@version}. Initializing...")
 		if !File.exists?(File.join(File.dirname(__FILE__),"../world"))
 			@log.info "Creating non-existant world directory."
 			Dir.mkdir(File.join(File.dirname(__FILE__),"../world"))
 		end
-		@configuration = Configuration.new self
-		if @configuration.max_players == -1
-			@configuration.max_players = 2147483647
+		$configuration = Configuration.new self
+		if $configuration.max_players == -1
+			$configuration.max_players = 2147483647
 		end
-		@log.log.level = @configuration.log_level
+		@log.log.level = $configuration.log_level
 		@connections = []
 		@protocol = ProtocolHandler.new self
 		@players = {}
 		@terrain_generator = GeneratorHandeler.new(self)
 		@worlds=[]
-		@configuration.worlds.each do |world|
-			@worlds<< World.new(self,world)
+		$configuration.worlds.each do |world|
+			@worlds << World.new(self,world)
 		end
-		
 	end
 	def config
-		return @configuration
+		return $configuration
 	end
 	def start
-		@server = EventMachine::start_server @configuration.interface, @configuration.port, Connection do |con|
+		@server = EventMachine::start_server $configuration.interface, $configuration.port, Connection do |con|
 			con.server = self
 			con.log = @log
 			#con.players = @players
@@ -41,7 +41,7 @@ class Server
 		@console = EventMachine::open_keyboard(CommandHandler) do |con|
 			con.server = self
 		end
-		@log.log.info "Server Listening, port #{@configuration.port}"
+		@log.log.info "Server Listening, port #{$configuration.port}"
 	end
 	def stop
 		@log.info "Stopping server..."
