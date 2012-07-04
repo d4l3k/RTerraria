@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :name, :inventory, :x, :y, :connection, :id, :world, :raw_data
+  attr_accessor :name, :inventory, :x, :y, :connection, :id, :world, :hair_style, :gender, :hair_color, :skin_color, :eye_color, :shirt_color, :undershirt_color, :pants_color, :shoe_color
 	def initialize name
 		@name = name
 		@health = 0

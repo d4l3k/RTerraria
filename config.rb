@@ -49,5 +49,6 @@ class Configuration
     @worlds.push WorldConfig.new( "world1", 15, [FlatgrassGenerator] )
     @log_level = Logger::DEBUG
     register_event :connection_request, [BasicHandler]
+    register_event :inventory_data, [BasicHandler]
   end
 end
