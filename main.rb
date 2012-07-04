@@ -24,13 +24,16 @@ require 'lib/network'
 require 'lib/command'
 require 'lib/terrain_generators'
 require 'lib/inventory'
-require 'config'
 require 'lib/config_utils'
+require 'lib/event'
 
 # Dynamically Loaded Classes
 Dir.glob(File.dirname(__FILE__) + '/lib/protocol/*.rb') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/lib/protocol/*/*.rb') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/lib/generator/*.rb') {|file| require file}
+
+# Config should be the last thing to load.
+require 'config'
 
 EventMachine::run {
 	s = Server.new

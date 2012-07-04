@@ -67,7 +67,10 @@ class AlphaProtocol
       :connection_request => { :version => :string },
       :disconnect => { :message => :string },
       :connection_response => { :player_slot => :byte },
-      :player_data => { :player_slot => :byte, :hair_style => :byte, :gender=>:byte, :hair_color => :color, :skin_color => :color, :eye_color => :color, :undershirt_color => :color, :pants_color => :color, :shoe_color => :color, :difficulty => :byte, :player_name => :string }
+      :player_data => { :player_slot => :byte, :hair_style => :byte, :gender=>:byte, :hair_color => :color, :skin_color => :color, :eye_color => :color, :shirt_color => :color, :undershirt_color => :color, :pants_color => :color, :shoe_color => :color, :difficulty => :byte, :player_name => :string },
+      :inventory_data => { :player_slot => :byte, :inventory_slot => :byte, :item_stack => :byte, :item_prefix=>:byte, :item_id=>:int16 },
+      :world_request => {},
+      :world_data => {:game_time=>:int32, :day_time=>:byte, :moon_phase=>:byte, :blood_moon => :byte, :map_width=>:int32, :map_height=> :int32, :spawn_tile_x => :int32, :spawn_tile_y => :int32, :ground_level_y => :int32, :rock_layer_y => :int32, :world_id => :int32, :flags => :byte, :world_name => :string }
     }
   end
 end

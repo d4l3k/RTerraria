@@ -1,4 +1,5 @@
 class ProtocolHandler
+  attr_accessor :protocols
 	def initialize server
 		@server = server
 		@config = server.config

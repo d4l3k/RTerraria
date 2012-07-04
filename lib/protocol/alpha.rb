@@ -17,41 +17,78 @@ class AlphaProtocol
   def read_packet connection, packet
     length = packet[0..3].unpack("V")[0]
     packet_key = packet[4].unpack("C")[0]
-    @log.debug("Recieved Packet Id: #{"0x%02X" % packet_id} (#{packets.key(packet_key).to_s}), length: #{length}.")
-    packet_id = packets.key(packet_key)
-    if id!=nil&&packet_components[id]!=nil
+    packet_id = packet_ids.key(packet_key)
+    @log.debug("Recieved Packet Id: #{"0x%02X" % packet_key} (#{packet_id.to_s}), length: #{length}.")
+    if packet_id!=nil&&packet_components[packet_id]!=nil
       packet_index = 5
-      packet_parts = {:length=>length,:id=>packet_key,:type=>packet_id}
-      packet_components[id].each do |key, type|
+      packet_parts = {:length=>length,:id=>packet_key,:type=>packet_id, :connection=>connection}
+      packet_components[packet_id].each do |key, type|
         data = nil
         if type==:byte
-          data = [packet[packet_index]].unpack("C")[0]
+          data = packet[packet_index].unpack("C")[0]
           packet_index+=1
         elsif type == :int16
-          data = [packet[packet_index..(packet_index+1)]].unpack("n")[0]
+          data = packet[packet_index..(packet_index+1)].unpack("n")[0]
           packet_index+=2
         elsif type == :int32
-          data = [packet[packet_index..(packet_index+3)]].unpack("N")[0]
+          data = packet[packet_index..(packet_index+3)].unpack("N")[0]
           packet_index+=4
         elsif type == :single
-          data = [packet[packet_index..(packet_index+3)]].unpack("g")[0]
+          data = packet[packet_index..(packet_index+3)].unpack("g")[0]
           packet_index+=4
         elsif type == :color
-          data = [packet[packet_index..(packet_index+2)]].unpack("CCC")[0..2]
+          data = packet[packet_index..(packet_index+2)].unpack("CCC")[0..2]
           packet_index+=3
         elsif type == :string
-          data = packet[packet_index..packet_length].to_s
+          data = packet[packet_index..packet.length].to_s
         end
         packet_parts[key]=data
       end
       response = $configuration.handle_event packet_id, packet_parts
       if !response
-        @log.debug("TODO: Add handler for #{"0x%02X" % packet_id} (#{packets.key(packet_id).to_s}). No handlers found!")
+        @log.debug("TODO: Add handler for #{"0x%02X" % packet_key} (#{packet_id}). No handlers found!")
+        @log.debug("PACKET DUMP: #{packet_parts}")
       end
     else
-      @log.debug("TODO: Implement #{"0x%02X" % packet_id} (#{packets.key(packet_id).to_s}). Ignoring!")
+      @log.debug("TODO: Implement #{"0x%02X" % packet_key} (#{packet_id}). Ignoring!")
     end
+  end
+  def build_packet data
+    # Checks to see if a valid :type is provided. If not it converts the :id (the :id is the numerical value of the packet. 0x01 vs :connection_request)
+    if data[:type]==nil
+      data[:type]==packet_ids.key(data[:id])
+    end
+    # converts :type to :id
+    if data[:id]==nil
+      data[:id]=packet_ids[data[:type]]
+    end
+    # Packs the id into byte form.
+    packet = [data[:id]].pack("C")
     
+    packet_components[data[:type]].each do |key, type|
+      if type==:byte
+        #data = [packet[packet_index]].unpack("C")[0]
+        packet+=[data[key]].pack("C")
+      elsif type == :int16
+        #data = [packet[packet_index..(packet_index+1)]].unpack("n")[0]
+        packet+=[data[key]].pack("n")
+      elsif type == :int32
+        #data = [packet[packet_index..(packet_index+3)]].unpack("N")[0]
+        packet+=[data[key]].pack("N")
+      elsif type == :single
+        #data = [packet[packet_index..(packet_index+3)]].unpack("g")[0]
+        packet+=[data[key]].pack("g")
+      elsif type == :color
+        #data = [packet[packet_index..(packet_index+2)]].unpack("CCC")[0..2]
+        packet+=data[key].pack("CCC")
+      elsif type == :string
+        #data = packet[packet_index..packet.length].to_s
+        packet+=data[key]
+      end
+    end
+    return [packet.length].pack("V")+packet
+  end
+end
 =begin
     when packets[:connection_request]
     	connection_request connection, length, packet
@@ -69,8 +106,8 @@ class AlphaProtocol
     else
       @log.debug("TODO: Implement #{"0x%02X" % packet_id} (#{packets.key(packet_id).to_s}). Ignoring!")
     end
-=end
   end
+
   def connection_response connection, world
     packet = [world.players.length].pack("C")
     send_packet connection, :connection_response, packet
@@ -143,3 +180,4 @@ class AlphaProtocol
 	  connection.send_data [packet.length].pack("V")+packet
 	end
 end
+=end

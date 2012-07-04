@@ -11,6 +11,7 @@ class Server
 		@version = "v0.1-alpha"
 		@log = RubycraftLogger.new("RTerraria")
 		@log.info("RubyCraft #{@version}. Initializing...")
+		$log = @log
 		if !File.exists?(File.join(File.dirname(__FILE__),"../world"))
 			@log.info "Creating non-existant world directory."
 			Dir.mkdir(File.join(File.dirname(__FILE__),"../world"))
@@ -34,8 +35,6 @@ class Server
 	end
 	def start
 		@server = EventMachine::start_server $configuration.interface, $configuration.port, Connection do |con|
-			con.server = self
-			con.log = @log
 			#con.players = @players
 		end
 		@console = EventMachine::open_keyboard(CommandHandler) do |con|
