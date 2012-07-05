@@ -9,6 +9,7 @@ class AlphaProtocol
       :world_request			      => 0x06,
       :world_data				        => 0x07,
       :request_tile_block		    => 0x08,
+      :statusbar_text           => 0x09,
       :send_tile_row			      => 0x0A,
       :send_tile_confirm		    => 0x0B,
       :receiving_player_joined 	=> 0x0C,
@@ -70,7 +71,25 @@ class AlphaProtocol
       :player_data => { :player_slot => :byte, :hair_style => :byte, :gender=>:byte, :hair_color => :color, :skin_color => :color, :eye_color => :color, :shirt_color => :color, :undershirt_color => :color, :pants_color => :color, :shoe_color => :color, :difficulty => :byte, :player_name => :string },
       :inventory_data => { :player_slot => :byte, :inventory_slot => :byte, :item_stack => :byte, :item_prefix=>:byte, :item_id=>:int16 },
       :world_request => {},
-      :world_data => {:game_time=>:int32, :day_time=>:byte, :moon_phase=>:byte, :blood_moon => :byte, :map_width=>:int32, :map_height=> :int32, :spawn_tile_x => :int32, :spawn_tile_y => :int32, :ground_level_y => :int32, :rock_layer_y => :int32, :world_id => :int32, :flags => :byte, :world_name => :string }
+      :world_data => {:game_time=>:int32, :day_time=>:byte, :moon_phase=>:byte, :blood_moon => :byte, :map_width=>:int32, :map_height=> :int32, :spawn_tile_x => :int32, :spawn_tile_y => :int32, :ground_level => :int32, :rock_level => :int32, :world_id => :int32, :flags => :byte, :world_name => :string },
+      :player_health_update => { :player_slot=>:byte, :current_health =>:int16, :max_health => :int16 },
+      :player_mana_update => { :player_slot=>:byte, :current_mana =>:int16, :max_mana => :int16 },
+      :player_buffs => { 
+        :player_slot=>:byte, 
+        :buff1=>:byte, 
+        :buff2=>:byte, 
+        :buff3=>:byte, 
+        :buff4=>:byte, 
+        :buff5=>:byte, 
+        :buff6=>:byte, 
+        :buff7=>:byte, 
+        :buff8=>:byte, 
+        :buff9=>:byte, 
+        :buff10=>:byte },
+      :request_tile_block => { :spawn_x => :int32, :spawn_Y => :int32 },
+      :send_spawn => {},
+      :send_tile_row => { :width => :int16, :tile_x => :int32, :tile_y => :int32, :flags=>:byte_array, :amount => :int16 },
+      :statusbar_text => { :num_msg => :int32, :message => :string }
     }
   end
 end

@@ -1,5 +1,5 @@
 class World
-attr_accessor :config, :name, :players, :seed, :height, :type, :dimension, :difficulty, :spawnx, :spawny
+attr_accessor :config, :name, :players, :seed, :height, :type, :dimension, :difficulty, :spawnx, :spawny, :loaded_chunks
 @server
 @loaded_chunks
 	def initialize server, world_config
@@ -8,7 +8,7 @@ attr_accessor :config, :name, :players, :seed, :height, :type, :dimension, :diff
 		@seed = world_config.seed
 		@config = world_config
 		@players = {}
-		@height = 128
+		@height = 1000
 		@loaded_chunks = [] #Or Array.new
 		@spawnx = 70
 		@spawny = 70
@@ -18,7 +18,7 @@ attr_accessor :config, :name, :players, :seed, :height, :type, :dimension, :diff
 			Dir.mkdir(File.join(File.dirname(__FILE__),"../world/#{@name}/chunk/"))
 			Dir.mkdir(File.join(File.dirname(__FILE__),"../world/#{@name}/player/"))
 		end
-		for x in -3..3 #Load a 7 chunk area.
+		for x in 0..3 #Load a 7 chunk area.
 			load_chunk x
 		end
 		@server.log.info("Loaded world: #{@name}")

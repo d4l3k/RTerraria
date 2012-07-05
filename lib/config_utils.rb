@@ -12,6 +12,7 @@ class Configuration
 attr_accessor :interface, :port, :max_players, :description, :motd, :minversion, :maxversion, :protocols, :authenticate, :worlds, :default_world, :log_level
   def initialize server
     @events = {}
+    @worlds = []
     config
   end
 end

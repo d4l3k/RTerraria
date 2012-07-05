@@ -45,10 +45,15 @@ class Configuration
     @protocols = [AlphaProtocol]
     @authenticate = false
     @default_world = "world1"
-    @worlds = []
     @worlds.push WorldConfig.new( "world1", 15, [FlatgrassGenerator] )
     @log_level = Logger::DEBUG
-    register_event :connection_request, [BasicHandler]
-    register_event :inventory_data, [BasicHandler]
+    register_event :connection_request,   [BasicHandler]
+    register_event :player_data,          [BasicHandler]
+    register_event :inventory_data,       [BasicHandler]
+    register_event :player_health_update, [BasicHandler]
+    register_event :player_mana_update,   [BasicHandler]
+    register_event :player_buffs,         [BasicHandler]
+    register_event :world_request,        [BasicHandler]
+    register_event :request_tile_block,   [BasicHandler]
   end
 end

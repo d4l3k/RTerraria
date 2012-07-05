@@ -21,25 +21,31 @@ class AlphaProtocol
     @log.debug("Recieved Packet Id: #{"0x%02X" % packet_key} (#{packet_id.to_s}), length: #{length}.")
     if packet_id!=nil&&packet_components[packet_id]!=nil
       packet_index = 5
-      packet_parts = {:length=>length,:id=>packet_key,:type=>packet_id, :connection=>connection}
+      packet_parts = {:length=>length,:id=>packet_key,:type=>packet_id, :connection=>connection, :player=>connection.player}
       packet_components[packet_id].each do |key, type|
         data = nil
         if type==:byte
+          # Single byte, unsigned
           data = packet[packet_index].unpack("C")[0]
           packet_index+=1
         elsif type == :int16
-          data = packet[packet_index..(packet_index+1)].unpack("n")[0]
+          # Integer 16-bit signed, small-endian
+          data = packet[packet_index..(packet_index+1)].unpack("s<")[0]
           packet_index+=2
         elsif type == :int32
-          data = packet[packet_index..(packet_index+3)].unpack("N")[0]
+          # Integer 32-bit signed, small-endian
+          data = packet[packet_index..(packet_index+3)].unpack("l<")[0]
           packet_index+=4
         elsif type == :single
+          # Single precision float
           data = packet[packet_index..(packet_index+3)].unpack("g")[0]
           packet_index+=4
         elsif type == :color
+          # 3 bytes
           data = packet[packet_index..(packet_index+2)].unpack("CCC")[0..2]
           packet_index+=3
         elsif type == :string
+          # String
           data = packet[packet_index..packet.length].to_s
         end
         packet_parts[key]=data
@@ -55,6 +61,7 @@ class AlphaProtocol
   end
   def build_packet data
     # Checks to see if a valid :type is provided. If not it converts the :id (the :id is the numerical value of the packet. 0x01 vs :connection_request)
+    $log.debug(data)
     if data[:type]==nil
       data[:type]==packet_ids.key(data[:id])
     end
@@ -69,6 +76,8 @@ class AlphaProtocol
       if type==:byte
         #data = [packet[packet_index]].unpack("C")[0]
         packet+=[data[key]].pack("C")
+      elsif type==:byte_array
+        packet+=data[key].pack("C*")
       elsif type == :int16
         #data = [packet[packet_index..(packet_index+1)]].unpack("n")[0]
         packet+=[data[key]].pack("n")

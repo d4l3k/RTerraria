@@ -18,4 +18,7 @@ class Connection < EventMachine::Connection
 			$log.info "Client (Unknown) disconnected."
 		end
 	end
+	def to_s
+	  return "#<Connection:#{@object_id} @signature=#{@signature}>"
+	end
 end
